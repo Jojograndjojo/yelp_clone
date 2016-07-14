@@ -10,9 +10,11 @@ feature 'restaurants' do
   end
 
   context 'restaurants have been added' do
+
     before do
       Restaurant.create(name: 'KFC')
     end
+
     scenario 'display restaurants' do
       visit '/restaurants'
       expect(page).to have_content('KFC')
@@ -22,6 +24,11 @@ feature 'restaurants' do
   end
 
   context 'creating restaurants' do
+
+    before do
+      sign_up
+    end
+
     scenario 'prompts user to fill out a form, then displays the new restaurant' do
       visit '/restaurants'
       click_link 'Add a restaurant'
@@ -58,6 +65,10 @@ feature 'restaurants' do
 
   context 'editing restaurants' do
 
+    before do
+      sign_up
+    end
+
     let!(:kfc){ Restaurant.create(name:'KFC', description:'Finger licking good')}
 
     scenario 'allows user to update restaurant page' do
@@ -73,6 +84,10 @@ feature 'restaurants' do
 
   context 'deleting restaurants' do
 
+    before do
+      sign_up
+    end
+
     let!(:kfc){ Restaurant.create(name:'KFC', description:'Finger licking good')}
 
     scenario 'allows  user to delete a restaurant' do
@@ -82,4 +97,13 @@ feature 'restaurants' do
       expect(page).to have_content 'Restaurant deleted'
     end
   end
+end
+
+def sign_up
+  visit '/'
+  click_link 'Sign up'
+  fill_in 'Email', with: 'a@mail.com'
+  fill_in 'Password', with: 'aaaaaa'
+  fill_in 'Password confirmation', with: 'aaaaaa'
+  click_button 'Sign up'
 end

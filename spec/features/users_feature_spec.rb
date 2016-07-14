@@ -1,11 +1,28 @@
 require 'rails_helper'
 
 feature 'User can sign in and out' do
+
+  before do
+    Restaurant.create(name: 'KFC')
+  end
+
   context 'User not signed in and on the homepage' do
     it 'should see a \'Sign in\' and a \'Sign up \' link' do
       visit('/')
       expect(page).to have_link('Sign in')
       expect(page).to have_link('Sign up')
+    end
+
+    it 'can create restaurants only if logged in' do
+      visit('/')
+      click_link('Add a restaurant')
+      expect(page).to have_content('You need to sign in or sign up before continuing.')
+    end
+
+    it 'can only edit/delete restaurants which it has created' do
+      visit('/')
+      click_link('Delete')
+      expect(page).to have_content('You need to sign in or sign up before continuing.')
     end
   end
 
@@ -29,5 +46,7 @@ feature 'User can sign in and out' do
       expect(page).not_to have_link('Sign in')
       expect(page).not_to have_link('Sign up')
     end
+
+
   end
 end
